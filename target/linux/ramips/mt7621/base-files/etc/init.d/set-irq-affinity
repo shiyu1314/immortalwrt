@@ -1,0 +1,29 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+start() {
+	echo "2" > "/proc/irq/21/smp_affinity"
+	echo "4" > "/proc/irq/24/smp_affinity"
+	echo "8" > "/proc/irq/23/smp_affinity"
+	echo 5 > /sys/class/net/eth0/queues/rx-0/rps_cpus
+	echo 5 > /sys/class/net/eth1/queues/rx-0/rps_cpus
+	echo 3 > /sys/class/net/ra0/queues/rx-0/rps_cpus
+	echo 3 > /sys/class/net/rax0/queues/rx-0/rps_cpus
+	echo 3 > /sys/class/net/apcli0/queues/rx-0/rps_cpus
+	echo 3 > /sys/class/net/apclix0/queues/rx-0/rps_cpus
+	echo 3 > /sys/class/net/rai0/queues/rx-0/rps_cpus
+	echo 3 > /sys/class/net/apclii0/queues/rx-0/rps_cpus
+	
+
+	modprobe mt_wifi
+	ifconfig rax0 up
+	ifconfig ra0 up
+	ifconfig rai0 up
+	/etc/init.d/apcli.sh start
+	/etc/init.d/apcli.sh start
+	modprobe mtkhnat
+	echo 32768 > /proc/sys/net/netfilter/nf_conntrack_buckets
+	echo 16384 > /proc/sys/net/netfilter/nf_conntrack_expect_max
+
+}
